@@ -4,10 +4,23 @@ from parse_page import parse_book_page
 import requests
 from bs4 import BeautifulSoup
 from check_for_redirect import check_for_redirect
+import argparse
+
+
+def parse_cmd_args():
+    """create parser to add arguments"""
+    parser = argparse.ArgumentParser(
+        description="The script downloads books from the site https://tululu.org in the range id books"
+    )
+    parser.add_argument("--start_id", default=1, type=int, help="the start position in range for parsing, default: 1")
+    parser.add_argument("--end_id", default=10, type=int, help="the end position in range for parsing, default: 10")
+    return parser
 
 
 def main():
-    for book_id in range(5, 7):
+    parser = parse_cmd_args()
+    args = parser.parse_args()
+    for book_id in range(args.start_id, args.end_id+1):
         try:
             url_d = f"https://tululu.org/txt.php?id={book_id}"
             url = f"https://tululu.org/b{book_id}/"
