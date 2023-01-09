@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from check_for_redirect import check_for_redirect
 import argparse
+from tqdm import tqdm
 
 
 def parse_cmd_args():
@@ -20,7 +21,7 @@ def parse_cmd_args():
 def main():
     parser = parse_cmd_args()
     args = parser.parse_args()
-    for book_id in range(args.start_id, args.end_id+1):
+    for book_id in tqdm(range(args.start_id, args.end_id+1)):
         try:
             url_d = f"https://tululu.org/txt.php?id={book_id}"
             url = f"https://tululu.org/b{book_id}/"
