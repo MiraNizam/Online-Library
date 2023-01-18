@@ -3,12 +3,12 @@ import argparse
 import requests
 from bs4 import BeautifulSoup
 from check_for_redirect import check_for_redirect
-from download_book import download_txt
-from download_image import download_image
-from parse_page import parse_book_page
+from downloader import download_txt, download_image
+from parser import parse_book_page
 from tqdm import tqdm
 import sys
 import logging
+import time
 
 
 def create_parse_args():
@@ -38,9 +38,10 @@ def main():
     args = parser.parse_args()
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
         try:
-            url_d = f"https://tululu.org/txt.php?id={book_id}"
+            download_url = f"https://tululu.org/txt.php"
             url = f"https://tululu.org/b{book_id}/"
-            response = requests.get(url)
+            payload = {"id": book_id}
+            response = requests.get(url, params=payload)
             response.raise_for_status()
             check_for_redirect(response)
             soup = BeautifulSoup(response.text, "lxml")
@@ -51,8 +52,12 @@ def main():
             comments = book_details["comments"]
             genres = book_details["genres"]
             filename = f"{book_id}.{title}"
-            download_txt(url_d, filename)
+            download_txt(download_url, filename)
             download_image(picture_url)
+        except requests.ConnectionError as error:
+            print(f"{error} restart after 10 seconds")
+            time.sleep(10)
+            main()
         except requests.HTTPError:
             stderr_file.write(f"Exception occurred. There was redirect.\n")
             logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
