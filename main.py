@@ -55,9 +55,9 @@ def main():
             download_txt(book_response, filename)
             download_image(picture_url)
         except requests.ConnectionError as error:
-            print(f"{error} restart after 10 seconds")
-            time.sleep(10)
-            main()
+            print(f"{error} continue in 5 seconds")
+            time.sleep(5)
+            continue
         except requests.HTTPError:
             stderr_file.write(f"Exception occurred. There was redirect.\n")
             logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
