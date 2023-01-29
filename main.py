@@ -38,21 +38,21 @@ def main():
     args = parser.parse_args()
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
         try:
-            download_url = f"https://tululu.org/txt.php"
-            url = f"https://tululu.org/b{book_id}/"
+            book_url = f"https://tululu.org/txt.php"
+            page_url = f"https://tululu.org/b{book_id}/"
             payload = {"id": book_id}
-            response = requests.get(url, params=payload)
-            response.raise_for_status()
-            check_for_redirect(response)
-            soup = BeautifulSoup(response.text, "lxml")
-            book_details = parse_book_page(soup, url)
+            page_response = requests.get(page_url)
+            page_response.raise_for_status()
+            check_for_redirect(page_response)
+            book_response = requests.get(book_url, params=payload)
+            book_response.raise_for_status()
+            check_for_redirect(book_response)
+            soup = BeautifulSoup(page_response.text, "lxml")
+            book_details = parse_book_page(soup, page_url)
             title = book_details["title"]
-            author = book_details["author"]
             picture_url = book_details["picture_url"]
-            comments = book_details["comments"]
-            genres = book_details["genres"]
             filename = f"{book_id}.{title}"
-            download_txt(download_url, filename)
+            download_txt(book_response, filename)
             download_image(picture_url)
         except requests.ConnectionError as error:
             print(f"{error} restart after 10 seconds")
@@ -61,7 +61,7 @@ def main():
         except requests.HTTPError:
             stderr_file.write(f"Exception occurred. There was redirect.\n")
             logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
-            logging.info(f"Failed to download the book from the link {url}.")
+            logging.info(f"Failed to download the book from the link {page_url}.")
             continue
 
 
