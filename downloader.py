@@ -6,7 +6,7 @@ from pathvalidate import sanitize_filename
 from urllib.parse import unquote, urlsplit
 
 
-def download_txt(url, filename, folder="books/"):
+def download_txt(response, filename, folder="books/"):
     """Function for downloading text files.
     Args:
         url (str): Link to the text you want to download.
@@ -19,8 +19,6 @@ def download_txt(url, filename, folder="books/"):
     checked_filename = sanitize_filename(filename)
     full_filename = f"{checked_filename}.txt"
     text_path = os.path.join(folder, full_filename)
-    response = requests.get(url)
-    response.raise_for_status()
     with open(text_path, "w+", encoding="utf-8") as file:
         file.write(response.text)
     return text_path
