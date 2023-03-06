@@ -15,6 +15,8 @@ def parse_book_page(soup, url):
     book_details = list(map(lambda x: x.strip(), book_details_tag.text.split("::")))
     picture_tag = soup.find("div", class_="bookimage").find("img")["src"]
     picture_url = urljoin(url, picture_tag)
+    txt_tag = soup.find("table", class_="d_book").select_one('[href^="/txt.php?id="]')["href"]
+    txt_url = urljoin(url, txt_tag)
     comments_tag = soup.select(".texts > .black")
     comments = [comment.text for comment in comments_tag]
     genres_tag = soup.find("span", class_="d_book").find_all("a")
@@ -23,7 +25,9 @@ def parse_book_page(soup, url):
         "title": book_details[0],
         "author": book_details[1],
         "picture_url": picture_url,
+        "txt_url": txt_url,
         "comments": comments,
         "genres": genres,
     }
     return page
+
