@@ -13,13 +13,13 @@ def parse_book_page(soup, url):
 
     book_details_tag = soup.find("h1")
     book_details = list(map(lambda x: x.strip(), book_details_tag.text.split("::")))
-    picture_tag = soup.find("div", class_="bookimage").find("img")["src"]
+    picture_tag = soup.select_one(".bookimage img")["src"]
     picture_url = urljoin(url, picture_tag)
-    txt_tag = soup.find("table", class_="d_book").select_one('[href^="/txt.php?id="]')["href"]
+    txt_tag = soup.select_one('.d_book [href^="/txt.php?id="]')["href"]
     txt_url = urljoin(url, txt_tag)
-    comments_tag = soup.select(".texts > .black")
+    comments_tag = soup.select(".texts .black")
     comments = [comment.text for comment in comments_tag]
-    genres_tag = soup.find("span", class_="d_book").find_all("a")
+    genres_tag = soup.select("span.d_book a")
     genres = [genre.get_text() for genre in genres_tag]
     page = {
         "title": book_details[0],
@@ -30,4 +30,3 @@ def parse_book_page(soup, url):
         "genres": genres,
     }
     return page
-

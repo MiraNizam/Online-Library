@@ -20,7 +20,7 @@ def parse_sci_fi_category(page_start: int = 1, page_finish: int = 4):
         response.raise_for_status()
         check_for_redirect(response)
         soup = BeautifulSoup(response.text, 'lxml')
-        book_ids = soup.find_all("table", class_="d_book")
+        book_ids = soup.select(".d_book")
         for id in book_ids:
             book_url = urljoin(sci_fi_page, id.find("a")["href"])
             yield book_url
