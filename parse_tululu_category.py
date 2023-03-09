@@ -9,13 +9,68 @@ from downloader import download_txt, download_image
 import time
 import logging
 import sys
+import argparse
+from pathlib import Path
+
+def create_parse_args(last_page):
+    """create parser to add arguments"""
+    parser = argparse.ArgumentParser(
+        description="The script downloads books from the site https://tululu.org in the range id books"
+    )
+    parser.add_argument(
+        "--start_page",
+        default=1,
+        type=int,
+        help="the start position in range for parsing, default: 1",
+    )
+    parser.add_argument(
+        "--end_page",
+        default=last_page,
+        type=int,
+        help="the start position in range for parsing, default: the last page in category",
+    )
+    parser.add_argument(
+        "--dest_folder",
+        default="",
+        type=str,
+        help="path to the catalogue with parse result: images, books, JSON, as default: current folder"
+    )
+    parser.add_argument(
+        "--skip_imgs",
+        default=True,
+        type=bool,
+        help="Don't download images",
+    )
+    parser.add_argument(
+        "--skip_txt",
+        default=True,
+        type=bool,
+        help="Don't download txt",
+    )
+    parser.add_argument(
+        "--json_path",
+        default="",
+        type=str,
+        help="path to *.json file"
+    )
+
+    return parser
 
 
-def parse_sci_fi_category(page_start: int = 1, page_finish: int = 4):
+def define_last_page(url):
+    """Func defines the first and the last pages from category"""
+    response = requests.get(url)
+    response.raise_for_status()
+    check_for_redirect(response)
+    soup = BeautifulSoup(response.text, 'lxml')
+    last_page = int(soup.select_one(".npage:last-child").text)
+    return last_page
+
+
+def parse_category(url, page_start: int, page_finish: int):
     """ Parse range of pages from sci-fi category. Return generator with book urls. """
-    sci_fi_url = "https://tululu.org/l55/"
-    for page in range(page_start, page_finish+1):
-        sci_fi_page = f"{sci_fi_url}{page}"
+    for page in range(page_start, page_finish):
+        sci_fi_page = f"{url}{page}"
         response = requests.get(sci_fi_page)
         response.raise_for_status()
         check_for_redirect(response)
@@ -26,16 +81,29 @@ def parse_sci_fi_category(page_start: int = 1, page_finish: int = 4):
             yield book_url
 
 
-def save_to_json(book_descriptions, filepath: str = ""):
+def save_to_json(book_descriptions: list, filepath: str):
+    Path(filepath).mkdir(parents=True, exist_ok=True)
     json_filepath = os.path.join(filepath, "book_descriptions.json")
     with open(json_filepath, "w", encoding="utf8") as file:
         json.dump(book_descriptions, file, indent=4, ensure_ascii=False)
 
 
 def main():
+    category_url = "https://tululu.org/l55/"
     stderr_file = sys.stderr
+    last_page = define_last_page(category_url) + 1
+    parser = create_parse_args(last_page)
+    args = parser.parse_args()
+    start_page = args.start_page
+    end_page = args.end_page
+    images_folder = os.path.join(args.dest_folder, "images")
+    txt_folder = os.path.join(args.dest_folder, "books")
+    skip_imgs = args.skip_imgs
+    skip_txt = args.skip_txt
+    json_path = os.path.join(args.json_path, "")
     book_descriptions = list()
-    for book_url in parse_sci_fi_category():
+
+    for book_url in parse_category(category_url, start_page, end_page):
         try:
             response = requests.get(book_url)
             response.raise_for_status()
@@ -47,8 +115,17 @@ def main():
             picture_url = book_details["picture_url"]
             filename = f"{title}"
             book_response = requests.get(book_details["txt_url"])
-            img_path = download_image(picture_url)
-            book_path = download_txt(book_response, filename)
+
+            if not skip_imgs:
+                img_path = download_image(picture_url, images_folder)
+            else:
+                img_path = "No picture"
+
+            if not skip_txt:
+                book_path = download_txt(book_response, filename, txt_folder)
+            else:
+                book_path = "No txt"
+
             book_description = {
                 "title": book_details["title"],
                 "author": book_details["author"],
@@ -70,7 +147,7 @@ def main():
             continue
         except TypeError:
             continue
-    save_to_json(book_descriptions)
+    save_to_json(book_descriptions, json_path)
 
 
 if __name__ == "__main__":
