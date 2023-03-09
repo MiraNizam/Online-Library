@@ -41,12 +41,22 @@ pip install -r requirements.txt
 You need to run the script from the Online-Library/ folder
 The default values are in the range 1 to 10 of the book.
 ```
-python3 main.py
+python parse_tululu_category.py
 ```
-To download another list of books, you must specify the range:
+Script has command-line interface for comfortable using. 
+Interface includes the following commands: 
 
+* ```--start_page```  the start position in range for parsing, default: 1 
+* ```--end_page``` the start position in range for parsing, default: the last page in category
+* ```--dest_folder``` path to the catalogue with parse result: images, books, JSON, as default: current folder
+* ```--skip_imgs``` Don't download images
+* ```--skip_txt```Don't download txt
+* ```--json_path``` path to *.json file
+* ```--help``` use it if you forget the information above
+
+Example:
 ```
-python3 main.py --start_id=11 --end_id=15
+python parse_tululu_category.py --start_page 600 --end_page 601 --dest_folder page_600 --json_path json_file --skip_imgs False
 ```
 
 
