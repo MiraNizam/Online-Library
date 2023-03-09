@@ -6,7 +6,7 @@ from pathvalidate import sanitize_filename
 from urllib.parse import unquote, urlsplit
 
 
-def download_txt(response, filename, folder="books/"):
+def download_txt(response, filename, folder):
     """Function for downloading text files.
     Args:
         url (str): Link to the text you want to download.
@@ -15,6 +15,7 @@ def download_txt(response, filename, folder="books/"):
     returns:
         str: The path to the file where the text is saved.
     """
+
     Path(folder).mkdir(parents=True, exist_ok=True)
     checked_filename = sanitize_filename(filename)
     full_filename = f"{checked_filename}.txt"
@@ -24,7 +25,7 @@ def download_txt(response, filename, folder="books/"):
     return text_path
 
 
-def download_image(url, folder="images/"):
+def download_image(url, folder):
     """Function for downloading images.
     Args:
         url (str): Link to the image you want to download.
