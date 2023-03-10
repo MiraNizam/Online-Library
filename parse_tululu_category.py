@@ -1,16 +1,19 @@
-import os.path
+import argparse
 import json
+import logging
+import os.path
+import sys
+import time
+from parser import parse_book_page
+from pathlib import Path
+from urllib.parse import urljoin
+
 import requests
 from bs4 import BeautifulSoup
+
 from check_for_redirect import check_for_redirect
-from urllib.parse import urljoin
-from parser import parse_book_page
-from downloader import download_txt, download_image
-import time
-import logging
-import sys
-import argparse
-from pathlib import Path
+from downloader import download_image, download_txt
+
 
 def create_parse_args(last_page):
     """create parser to add arguments"""

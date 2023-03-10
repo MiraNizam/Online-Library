@@ -1,14 +1,15 @@
 import argparse
+import logging
+import sys
+import time
+from parser import parse_book_page
 
 import requests
 from bs4 import BeautifulSoup
-from check_for_redirect import check_for_redirect
-from downloader import download_txt, download_image
-from parser import parse_book_page
 from tqdm import tqdm
-import sys
-import logging
-import time
+
+from check_for_redirect import check_for_redirect
+from downloader import download_image, download_txt
 
 
 def create_parse_args():
