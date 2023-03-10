@@ -9,7 +9,7 @@ from urllib.parse import unquote, urlsplit
 def download_txt(response, filename, folder):
     """Function for downloading text files.
     Args:
-        url (str): Link to the text you want to download.
+        response: Link to the text you want to download.
         filename (str): The name of the file to save with.
         folder (str): Folder where to save.
     returns:

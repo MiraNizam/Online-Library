@@ -36,8 +36,11 @@ def main():
     stderr_file = sys.stderr
     parser = create_parse_args()
     args = parser.parse_args()
+
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
         try:
+            txt_folder = "books"
+            images_folder = "images"
             book_url = f"https://tululu.org/txt.php"
             page_url = f"https://tululu.org/b{book_id}/"
             payload = {"id": book_id}
@@ -52,8 +55,8 @@ def main():
             title = book_details["title"]
             picture_url = book_details["picture_url"]
             filename = f"{book_id}.{title}"
-            download_txt(book_response, filename)
-            download_image(picture_url)
+            download_txt(book_response, filename, txt_folder)
+            download_image(picture_url, images_folder)
         except requests.ConnectionError as error:
             print(f"{error} continue in 5 seconds")
             time.sleep(5)

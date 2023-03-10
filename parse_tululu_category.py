@@ -37,13 +37,13 @@ def create_parse_args(last_page):
     )
     parser.add_argument(
         "--skip_imgs",
-        default=True,
+        default=False,
         type=bool,
         help="Don't download images",
     )
     parser.add_argument(
         "--skip_txt",
-        default=True,
+        default=False,
         type=bool,
         help="Don't download txt",
     )
