@@ -15,7 +15,7 @@ from check_for_redirect import check_for_redirect
 from downloader import download_image, download_txt
 
 
-def create_parse_args(last_page):
+def create_args(last_page):
     """create parser to add arguments"""
     parser = argparse.ArgumentParser(
         description="The script downloads books from the site https://tululu.org in the range id books"
@@ -72,16 +72,29 @@ def define_last_page(url):
 
 def parse_category(url, page_start: int, page_finish: int):
     """ Parse range of pages from sci-fi category. Return generator with book urls. """
+    stderr_file = sys.stderr
     for page in range(page_start, page_finish):
-        sci_fi_page = f"{url}{page}"
-        response = requests.get(sci_fi_page)
-        response.raise_for_status()
-        check_for_redirect(response)
-        soup = BeautifulSoup(response.text, 'lxml')
-        book_ids = soup.select(".d_book")
-        for id in book_ids:
-            book_url = urljoin(sci_fi_page, id.find("a")["href"])
-            yield book_url
+        try:
+            sci_fi_page = f"{url}{page}"
+            response = requests.get(sci_fi_page)
+            response.raise_for_status()
+            check_for_redirect(response)
+            soup = BeautifulSoup(response.text, 'lxml')
+            book_ids = soup.select(".d_book")
+            for id in book_ids:
+                book_url = urljoin(sci_fi_page, id.find("a")["href"])
+                yield book_url
+        except requests.exceptions.ConnectionError as error:
+            print(f"{error} continue in 5 seconds")
+            time.sleep(5)
+            continue
+        except requests.exceptions.HTTPError as error:
+            stderr_file.write(f"Exception occurred. {error} \n")
+            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
+            logging.info(f"Failed to download the book from the link {sci_fi_page}.")
+            continue
+        except TypeError:
+            continue
 
 
 def save_to_json(book_descriptions: list, filepath: str):
@@ -95,7 +108,7 @@ def main():
     category_url = "https://tululu.org/l55/"
     stderr_file = sys.stderr
     last_page = define_last_page(category_url) + 1
-    parser = create_parse_args(last_page)
+    parser = create_args(last_page)
     args = parser.parse_args()
     start_page = args.start_page
     end_page = args.end_page
