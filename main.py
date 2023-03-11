@@ -12,7 +12,7 @@ from check_for_redirect import check_for_redirect
 from downloader import download_image, download_txt
 
 
-def create_parse_args():
+def create_args():
     """create parser to add arguments"""
     parser = argparse.ArgumentParser(
         description="The script downloads books from the site https://tululu.org in the range id books"
@@ -35,7 +35,7 @@ def create_parse_args():
 def main():
 
     stderr_file = sys.stderr
-    parser = create_parse_args()
+    parser = create_args()
     args = parser.parse_args()
 
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
