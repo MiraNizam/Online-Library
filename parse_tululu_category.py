@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup
 from check_for_redirect import check_for_redirect
 from downloader import download_image, download_txt
 
+logger = logging.getLogger(__file__)
+
 
 def create_args(last_page):
     """create parser to add arguments"""
@@ -85,13 +87,14 @@ def parse_category(url, page_start: int, page_finish: int):
                 book_url = urljoin(sci_fi_page, id.find("a")["href"])
                 yield book_url
         except requests.exceptions.ConnectionError as error:
+            logging.error("Lost connection to the site")
             print(f"{error} continue in 5 seconds")
             time.sleep(5)
+
             continue
         except requests.exceptions.HTTPError as error:
             stderr_file.write(f"Exception occurred. {error} \n")
-            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
-            logging.info(f"Failed to download the book from the link {sci_fi_page}.")
+            logging.error(f"HTTPError is raised. The link {sci_fi_page}.")
             continue
         except TypeError:
             continue
@@ -105,6 +108,8 @@ def save_to_json(book_descriptions: list, filepath: str):
 
 
 def main():
+    logging.basicConfig(level=logging.ERROR, format="%(asctime)s %(process)d %(levelname)s %(message)s")
+    logger.setLevel(logging.DEBUG)
     category_url = "https://tululu.org/l55/"
     stderr_file = sys.stderr
     last_page = define_last_page(category_url) + 1
@@ -153,13 +158,13 @@ def main():
             book_descriptions.append(book_description)
 
         except requests.ConnectionError as error:
+            logging.error("Lost connection to the site")
             print(f"{error} continue in 5 seconds")
             time.sleep(5)
             continue
         except requests.HTTPError:
             stderr_file.write(f"Exception occurred. There was redirect.\n")
-            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
-            logging.info(f"Failed to download the book from the link {book_url}.")
+            logging.error(f"HTTPError is raised. The link  {book_url}.")
             continue
         except TypeError:
             continue

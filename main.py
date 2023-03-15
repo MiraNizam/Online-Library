@@ -11,6 +11,8 @@ from tqdm import tqdm
 from check_for_redirect import check_for_redirect
 from downloader import download_image, download_txt
 
+logger = logging.getLogger(__file__)
+
 
 def create_args():
     """create parser to add arguments"""
@@ -33,7 +35,8 @@ def create_args():
 
 
 def main():
-
+    logging.basicConfig(level=logging.ERROR, format="%(asctime)s %(process)d %(levelname)s %(message)s")
+    logger.setLevel(logging.DEBUG)
     stderr_file = sys.stderr
     parser = create_args()
     args = parser.parse_args()
@@ -64,8 +67,7 @@ def main():
             continue
         except requests.HTTPError:
             stderr_file.write(f"Exception occurred. There was redirect.\n")
-            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(process)d %(levelname)s %(message)s")
-            logging.info(f"Failed to download the book from the link {page_url}.")
+            logging.error(f"HTTPError is raised. The link  {book_url}.")
             continue
 
 
