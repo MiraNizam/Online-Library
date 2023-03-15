@@ -62,6 +62,10 @@ def create_args(last_page):
     return parser
 
 
+class ParsingDataFormatError(TypeError):
+    pass
+
+
 def define_last_page(url):
     """Func defines the first and the last pages from category"""
     response = requests.get(url)
@@ -96,7 +100,7 @@ def parse_category(url, page_start: int, page_finish: int):
             stderr_file.write(f"Exception occurred. {error} \n")
             logging.error(f"HTTPError is raised. The link {sci_fi_page}.")
             continue
-        except TypeError:
+        except ParsingDataFormatError:
             continue
 
 
@@ -135,7 +139,10 @@ def main():
             title = book_details["title"]
             picture_url = book_details["picture_url"]
             filename = f"{title}"
+            
             book_response = requests.get(book_details["txt_url"])
+            response.raise_for_status()
+            check_for_redirect(response)
 
             if not skip_imgs:
                 img_path = download_image(picture_url, images_folder)
@@ -166,7 +173,7 @@ def main():
             stderr_file.write(f"Exception occurred. There was redirect.\n")
             logging.error(f"HTTPError is raised. The link  {book_url}.")
             continue
-        except TypeError:
+        except ParsingDataFormatError:
             continue
     save_to_json(book_descriptions, json_path)
 
