@@ -17,7 +17,7 @@ from downloader import download_image, download_txt
 logger = logging.getLogger(__file__)
 
 
-def create_args(last_page):
+def create_parser(last_page):
     """create parser to add arguments"""
     parser = argparse.ArgumentParser(
         description="The script downloads books from the site https://tululu.org in the range id books"
@@ -117,7 +117,7 @@ def main():
     category_url = "https://tululu.org/l55/"
     stderr_file = sys.stderr
     last_page = define_last_page(category_url) + 1
-    parser = create_args(last_page)
+    parser = create_parser(last_page)
     args = parser.parse_args()
     start_page = args.start_page
     end_page = args.end_page

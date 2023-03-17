@@ -14,7 +14,7 @@ from downloader import download_image, download_txt
 logger = logging.getLogger(__file__)
 
 
-def create_args():
+def create_parser():
     """create parser to add arguments"""
     parser = argparse.ArgumentParser(
         description="The script downloads books from the site https://tululu.org in the range id books"
@@ -38,7 +38,7 @@ def main():
     logging.basicConfig(level=logging.ERROR, format="%(asctime)s %(process)d %(levelname)s %(message)s")
     logger.setLevel(logging.DEBUG)
     stderr_file = sys.stderr
-    parser = create_args()
+    parser = create_parser()
     args = parser.parse_args()
 
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
