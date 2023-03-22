@@ -48,19 +48,24 @@ def main():
             book_url = f"https://tululu.org/txt.php"
             page_url = f"https://tululu.org/b{book_id}/"
             payload = {"id": book_id}
+
             page_response = requests.get(page_url)
             page_response.raise_for_status()
             check_for_redirect(page_response)
+
             book_response = requests.get(book_url, params=payload)
             book_response.raise_for_status()
             check_for_redirect(book_response)
+
             soup = BeautifulSoup(page_response.text, "lxml")
             book_details = parse_book_page(soup, page_url)
             title = book_details["title"]
             picture_url = book_details["picture_url"]
             filename = f"{book_id}.{title}"
+
             download_txt(book_response, filename, txt_folder)
             download_image(picture_url, images_folder)
+
         except requests.ConnectionError as error:
             print(f"{error} continue in 5 seconds")
             time.sleep(5)
