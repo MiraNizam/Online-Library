@@ -42,15 +42,13 @@ def create_parser(last_page):
     )
     parser.add_argument(
         "--skip_imgs",
-        default=False,
-        type=bool,
-        help="Don't download images",
+        action='store_true',
+        help="If you explicitly specify 'skip_imgs', images will not be downloaded.",
     )
     parser.add_argument(
         "--skip_txt",
-        default=False,
-        type=bool,
-        help="Don't download txt",
+        action='store_true',
+        help="If you explicitly specify 'skip_txt, txt will not be downloaded.",
     )
     parser.add_argument(
         "--json_path",
@@ -87,20 +85,17 @@ def parse_category(url, page_start: int, page_finish: int):
             check_for_redirect(response)
             soup = BeautifulSoup(response.text, 'lxml')
             book_ids = soup.select(".d_book")
-            for id in book_ids:
-                book_url = urljoin(sci_fi_page, id.find("a")["href"])
+            for book_id in book_ids:
+                book_url = urljoin(sci_fi_page, book_id.find("a")["href"])
                 yield book_url
         except requests.exceptions.ConnectionError as error:
             logging.error("Lost connection to the site")
             print(f"{error} continue in 5 seconds")
             time.sleep(5)
-
             continue
         except requests.exceptions.HTTPError as error:
             stderr_file.write(f"Exception occurred. {error} \n")
             logging.error(f"HTTPError is raised. The link {sci_fi_page}.")
-            continue
-        except ParsingDataFormatError:
             continue
 
 
@@ -114,9 +109,11 @@ def save_to_json(book_descriptions: list, filepath: str):
 def main():
     logging.basicConfig(level=logging.ERROR, format="%(asctime)s %(process)d %(levelname)s %(message)s")
     logger.setLevel(logging.DEBUG)
-    category_url = "https://tululu.org/l55/"
     stderr_file = sys.stderr
+
+    category_url = "https://tululu.org/l55/"
     last_page = define_last_page(category_url) + 1
+
     parser = create_parser(last_page)
     args = parser.parse_args()
     start_page = args.start_page
@@ -126,6 +123,7 @@ def main():
     skip_imgs = args.skip_imgs
     skip_txt = args.skip_txt
     json_path = os.path.join(args.json_path, "")
+
     book_descriptions = list()
 
     for book_url in parse_category(category_url, start_page, end_page):
@@ -173,7 +171,7 @@ def main():
             stderr_file.write(f"Exception occurred. There was redirect.\n")
             logging.error(f"HTTPError is raised. The link  {book_url}.")
             continue
-        except ParsingDataFormatError:
+        except TypeError:
             continue
     save_to_json(book_descriptions, json_path)
 
