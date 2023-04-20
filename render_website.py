@@ -1,13 +1,20 @@
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
+from livereload import Server, shell
 
 
-env = Environment(
-    loader=FileSystemLoader('.'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
+def on_reload():
+    env = Environment(
+        loader=FileSystemLoader('.'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
+    template = env.get_template('template.html')
+    rendered_page = template.render(
+        book_descriptions=get_book_descriptions(),
+    )
 
-template = env.get_template('template.html')
+    with open('rendered_index.html', 'w', encoding="utf8") as file:
+        file.write(rendered_page)
 
 
 def get_book_descriptions():
@@ -17,9 +24,12 @@ def get_book_descriptions():
     return book_descriptions
 
 
-rendered_page = template.render(
-    book_descriptions=get_book_descriptions(),
-)
+def main():
+    on_reload()
+    server = Server()
+    server.watch('template.html', on_reload)
+    server.serve(root='.')
 
-with open('rendered_index.html', 'w', encoding="utf8") as file:
-    file.write(rendered_page)
+
+if __name__ == "__main":
+    main()
