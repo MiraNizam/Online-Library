@@ -20,12 +20,13 @@
           <div class="card mb-3" style="max-width: 540px;">
             <div class="row no-gutters">
               <div class="col-md-4">
-                <img src="{{description['img_path']}}" class="card-img" alt="Обложка книги {{description['title']}}">
+                <img src="{{description['img_path']|urlencode}}" class="card-img" alt="Обложка книги {{description['title']}}">
               </div>
               <div class="col-md-8">
                 <div class="card-body">
                   <h5 class="card-title">{{description['title']}}</h5>
                   <p class="card-text">{{description['author']}}</p>
+                  <p><a href={{description['book_path']|urlencode}} target="_blank" rel="noopener noreferrer">Читать</a></p>
                   <p class="card-text"><small class="text-muted">{{description['genres']}}</small></p>
                 </div>
               </div>
