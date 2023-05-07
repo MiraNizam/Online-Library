@@ -11,46 +11,28 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <h1>Hello, wooooorld!</h1>
+    <h1>Books</h1>
 
     <div class="container">
-      <div class="row">
-        <div class="col">
-        {% for description in book_descriptions_by_two %}
+      <div class="row row-cols-2">
+        {% for description in book_descriptions %}
+        <div class="col col-md-6">
           <div class="card mb-3" style="max-width: 540px;">
             <div class="row no-gutters">
               <div class="col-md-4">
-                <img src="{{description[0]['img_path']}}" class="card-img" alt="{{description[0]['title']}}">
+                <img src="{{description['img_path']}}" class="card-img" alt="Обложка книги {{description['title']}}">
               </div>
               <div class="col-md-8">
                 <div class="card-body">
-                  <h5 class="card-title">{{description[0]['title']}}</h5>
-                  <p class="card-text">{{description[0]['author']}}</p>
-                  <p class="card-text"><small class="text-muted">{{description[0]['genres']}}</small></p>
+                  <h5 class="card-title">{{description['title']}}</h5>
+                  <p class="card-text">{{description['author']}}</p>
+                  <p class="card-text"><small class="text-muted">{{description['genres']}}</small></p>
                 </div>
               </div>
             </div>
           </div>
-        {% endfor %}
         </div>
-        <div class="col">
-        {% for description in book_descriptions_by_two %}
-          <div class="card mb-3" style="max-width: 540px;">
-            <div class="row no-gutters">
-              <div class="col-md-4">
-                <img src="{{description[0]['img_path']}}" class="card-img" alt="{{description[0]['title']}}">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">{{description[0]['title']}}</h5>
-                  <p class="card-text">{{description[0]['author']}}</p>
-                  <p class="card-text"><small class="text-muted">{{description[0]['genres']}}</small></p>
-                </div>
-              </div>
-            </div>
-          </div>
         {% endfor %}
-        </div>
       </div>
     </div>
 

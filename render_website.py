@@ -11,7 +11,7 @@ def on_reload():
     )
     template = env.get_template('template.html')
     rendered_page = template.render(
-        book_descriptions_by_two=get_book_descriptions(),
+        book_descriptions=get_book_descriptions(),
     )
 
     with open('index.html', 'w', encoding="utf8") as file:
@@ -22,9 +22,7 @@ def get_book_descriptions():
     with open("book_descriptions.json", "r") as file:
         book_descriptions_json = file.read()
     book_descriptions = json.loads(book_descriptions_json)
-    book_descriptions_by_two = list(chunked(book_descriptions, 2))
-    print(*book_descriptions_by_two, sep="\n" )
-    return book_descriptions_by_two
+    return book_descriptions
 
 
 def main():
