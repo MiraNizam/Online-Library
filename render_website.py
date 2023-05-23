@@ -22,7 +22,11 @@ def on_reload():
 
     for number, page in enumerate(chunked_descriptions_by_pages, 1):
         page_path = os.path.join(path, f"index{number}.html")
-        rendered_page = template.render(book_descriptions=page)
+        rendered_page = template.render(
+            book_descriptions=page,
+            current_page=number,
+            total_page=len(chunked_descriptions_by_pages)
+        )
 
         with open(page_path, "w", encoding="utf-8") as file:
             file.write(rendered_page)
