@@ -9,7 +9,7 @@ def on_reload():
     with open("book_descriptions.json", "r") as file:
         book_descriptions_json = file.read()
     book_descriptions = json.loads(book_descriptions_json)
-    chunked_descriptions_by_pages = list(chunked(book_descriptions, 20))
+    chunked_descriptions_by_pages = list(chunked(book_descriptions, 10))
 
     path = "pages"
     os.makedirs(path, exist_ok=True)
@@ -32,14 +32,12 @@ def on_reload():
             file.write(rendered_page)
 
 
-
 def main():
     on_reload()
     server = Server()
     server.watch('template.html', on_reload)
     server.serve(root='.')
 
-main()
 
-if __name__ == "__main":
+if __name__ == "__main__":
     main()
