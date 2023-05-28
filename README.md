@@ -36,7 +36,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-### How to run code:
+### How to run code (Part I):
 You can parse: range of books, pages or full category.
 
 You need to run the script from the Online-Library/ folder
@@ -77,7 +77,26 @@ Parse page **600**, save images and books in folder **page_600**, save .json fil
 ```
 python parse_tululu_category.py --start_page 600 --end_page 601 --dest_folder page_600 --json_path json_file --skip_imgs True
 ```
+### How to run code (Part I):
+Now we will create a site for the data that we received earlier:
+Input:
+```
+python render_website.py
+```
+Output:
+```
+ФОТО
+```
+The script created a site with books, [go to the site](http://127.0.0.1:5500/pages/index1.html)
 
+VIDEO
+
+Additionally, you can publish the site on [GitHub Pages](https://pages.github.com/). 
+Detailed instructions can be found in [this article](https://medium.com/nuances-of-programming/%D0%BA%D0%B0%D0%BA-%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D1%82%D1%8C-%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D1%8B%D0%B9-%D1%81%D0%B0%D0%B9%D1%82-%D0%BD%D0%B0-github-pages-e0f3c258ee22) or on [GitHub Pages](https://pages.github.com/).
+
+Example site on GitHub Pages:
+
+**[Library](https://miranizam.github.io/Online-Library/pages/index1.html)**
 
 ### Project Goals
 This code was written for educational purposes as part of an online course for web developers at [dvmn.org](https://dvmn.org/).
