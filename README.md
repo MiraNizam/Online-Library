@@ -4,7 +4,7 @@ The script that help you to download books and information about them posted on 
 With this script, you can get the following information:
 
 * Title of the book
-* book author
+* Book author
 * Comments
 * Genre
 * Book cover
