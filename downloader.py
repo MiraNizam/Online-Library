@@ -1,9 +1,9 @@
 import os.path
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 import requests
 from pathvalidate import sanitize_filename
-from urllib.parse import unquote, urlsplit
 
 
 def download_txt(response, filename, folder):
