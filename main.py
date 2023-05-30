@@ -43,8 +43,8 @@ def main():
 
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
         try:
-            txt_folder = "books"
-            images_folder = "images"
+            txt_folder = "media/books"
+            images_folder = "media/images"
             book_url = f"https://tululu.org/txt.php"
             page_url = f"https://tululu.org/b{book_id}/"
             payload = {"id": book_id}
