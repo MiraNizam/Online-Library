@@ -36,23 +36,23 @@ def create_parser(last_page):
     )
     parser.add_argument(
         "--dest_folder",
-        default="",
+        default="media",
         type=str,
-        help="path to the catalogue with parse result: images, books, JSON, as default: current folder"
+        help="path to the catalogue with parse result: images, books, as default: media"
     )
     parser.add_argument(
         "--skip_imgs",
-        action='store_true',
+        action="store_true",
         help="If you explicitly specify 'skip_imgs', images will not be downloaded.",
     )
     parser.add_argument(
         "--skip_txt",
-        action='store_true',
-        help="If you explicitly specify 'skip_txt, txt will not be downloaded.",
+        action="store_true",
+        help="If you explicitly specify 'skip_txt', txt will not be downloaded.",
     )
     parser.add_argument(
         "--json_path",
-        default="",
+        default="media",
         type=str,
         help="path to *.json file"
     )
@@ -69,7 +69,7 @@ def define_last_page(url):
     response = requests.get(url)
     response.raise_for_status()
     check_for_redirect(response)
-    soup = BeautifulSoup(response.text, 'lxml')
+    soup = BeautifulSoup(response.text, "lxml")
     last_page = int(soup.select_one(".npage:last-child").text)
     return last_page
 
@@ -83,7 +83,7 @@ def parse_category(url, page_start: int, page_finish: int):
             response = requests.get(sci_fi_page)
             response.raise_for_status()
             check_for_redirect(response)
-            soup = BeautifulSoup(response.text, 'lxml')
+            soup = BeautifulSoup(response.text, "lxml")
             book_ids = soup.select(".d_book")
             for book_id in book_ids:
                 book_url = urljoin(sci_fi_page, book_id.find("a")["href"])
