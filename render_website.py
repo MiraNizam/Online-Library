@@ -6,6 +6,8 @@ from livereload import Server, shell
 from more_itertools import chunked
 import argparse
 
+BOOK_COUNT = 10
+
 
 def create_parser():
     """create parser to add arguments"""
@@ -24,9 +26,8 @@ def create_parser():
 
 def on_reload(json_path="media"):
     with open(f"{json_path}/book_descriptions.json", "r") as file:
-        book_descriptions_json = file.read()
-    book_descriptions = json.loads(book_descriptions_json)
-    chunked_descriptions_by_pages = list(chunked(book_descriptions, 10))
+        book_descriptions = json.load(file)
+    chunked_descriptions_by_pages = list(chunked(book_descriptions, BOOK_COUNT))
 
     page_folder = "pages"
     os.makedirs(page_folder, exist_ok=True)
