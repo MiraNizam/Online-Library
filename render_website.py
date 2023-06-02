@@ -1,10 +1,10 @@
+import argparse
 import json
 import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server, shell
 from more_itertools import chunked
-import argparse
 
 BOOK_COUNT = 10
 
