@@ -52,7 +52,7 @@ def create_parser(last_page):
     )
     parser.add_argument(
         "--json_path",
-        default="media",
+        default="",
         type=str,
         help="path to *.json file"
     )

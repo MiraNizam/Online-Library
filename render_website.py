@@ -17,15 +17,15 @@ def create_parser():
 
     parser.add_argument(
         "--json_path",
-        default="media",
+        default="",
         type=str,
         help="path to JSON file, as default: media"
     )
     return parser
 
 
-def on_reload(json_path="media"):
-    with open(f"{json_path}/book_descriptions.json", "r") as file:
+def on_reload(json_path="media/book_descriptions.json"):
+    with open(f"{json_path}", "r") as file:
         book_descriptions = json.load(file)
     chunked_descriptions_by_pages = list(chunked(book_descriptions, BOOK_COUNT))
 
@@ -53,7 +53,7 @@ def on_reload(json_path="media"):
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    json_path = os.path.join(args.json_path, "")
+    json_path = args.json_path
 
     on_reload(json_path)
     server = Server()
