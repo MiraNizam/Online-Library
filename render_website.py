@@ -25,7 +25,7 @@ def create_parser():
 
 
 def on_reload(json_path):
-    with open(f"{json_path}", "r", encoding="utf-8") as file:
+    with open(json_path, "r", encoding="utf-8") as file:
         book_descriptions = json.load(file)
     chunked_descriptions_by_pages = list(chunked(book_descriptions, BOOK_COUNT))
 
