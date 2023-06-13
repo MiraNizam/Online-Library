@@ -3,7 +3,7 @@ import json
 import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from livereload import Server, shell
+from livereload import Server
 from more_itertools import chunked
 
 BOOK_COUNT = 10
@@ -57,7 +57,7 @@ def main():
 
     on_reload(json_path)
     server = Server()
-    server.watch("template.html", on_reload)
+    server.watch("template.html", on_reload(json_path))
     server.serve(root=".")
 
 
