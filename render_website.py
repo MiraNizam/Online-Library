@@ -5,6 +5,7 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from more_itertools import chunked
+from functools import partial
 
 BOOK_COUNT = 10
 
@@ -55,9 +56,11 @@ def main():
     args = parser.parse_args()
     json_path = args.json_path
 
-    on_reload(json_path)
+    on_reload_pages = partial(on_reload, json_path=json_path)
+
+    on_reload_pages()
     server = Server()
-    server.watch("template.html", on_reload(json_path))
+    server.watch("template.html", on_reload_pages)
     server.serve(root=".")
 
 
