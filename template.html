@@ -15,53 +15,53 @@
     <div class="mx-auto" style="width: 200px;">
       <nav aria-label="Page navigation">
         <ul class="pagination">
-          {% if current_page==1 %}
-            <li class="page-item disabled">
-              <a class="page-link" tabindex="-1" aria-disabled="true">Назад</a>
+        {% if current_page==1 %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true">Назад</a>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="./index{{current_page-1}}.html">Назад</a></li>
+        {% endif %}
+        {% for page in range(1, page_count+1) %}
+          {% if page == current_page %}
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" href="./index{{current_page}}.html">{{current_page}} <span class="sr-only">(current)</span></a></li>
           {% else %}
-            <li class="page-item"><a class="page-link" href="./index{{current_page-1}}.html">Назад</a></li>
-          {% endif %}
-          {% for page in range(1, page_count+1) %}
-            {% if page == current_page %}
-              <li class="page-item active" aria-current="page">
-                <a class="page-link" href="./index{{current_page}}.html">{{current_page}} <span class="sr-only">(current)</span></a></li>
-            {% else %}
-              <li class="page-item"><a class="page-link" href="./index{{page}}.html">{{page}}</a></li>
-            {% endif%}
-          {% endfor %}
-          {% if current_page==page_count %}
-            <li class="page-item disabled">
-              <a class="page-link" tabindex="-1" aria-disabled="true">Вперед</a>
-          {% else %}
-            <li class="page-item"><a class="page-link" href="./index{{current_page+1}}.html">Вперед</a></li>
-          {% endif %}
+            <li class="page-item"><a class="page-link" href="./index{{page}}.html">{{page}}</a></li>
+          {% endif%}
+        {% endfor %}
+        {% if current_page==page_count %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true">Впередl</a>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="./index{{current_page+1}}.html">Впередl</a></li>
+        {% endif %}
         </ul>
       </nav>
     </div>
   </div>
     <div class="container">
       <div class="row row-cols-2">
-        {% for description in book_descriptions %}
-          <div class="col col-md-6">
-            <div class="card mb-3" style="max-width: 540px;">
-              <div class="row no-gutters">
-                <div class="col-md-4">
-                  <img src="../{{description.img_path|urlencode}}" class="card-img" alt="Обложка книги {{description.title}}">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">{{description.title}}</h5>
-                    <p class="card-text">{{description.author}}</p>
-                    <p><a href="../{{description.book_path|urlencode}}" target="_blank" rel="noopener noreferrer">Читать</a></p>
-                    {% for genre in description.genres %}
-                      <span class="badge badge-light">{{genre}}</span>
-                    {% endfor %}
-                  </div>
+      {% for description in book_descriptions %}
+        <div class="col col-md-6">
+          <div class="card mb-3" style="max-width: 540px;">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img src="../{{description.img_path|urlencode}}" class="card-img" alt="Обложка книги {{description.title}}">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{description.title}}</h5>
+                  <p class="card-text">{{description.author}}</p>
+                  <p><a href="../{{description.book_path|urlencode}}" target="_blank" rel="noopener noreferrer">Читать</a></p>
+                  {% for genre in description.genres %}
+                    <span class="badge badge-light">{{genre}}</span>
+                  {% endfor %}
                 </div>
               </div>
             </div>
           </div>
-        {% endfor %}
+        </div>
+      {% endfor %}
       </div>
     </div>
 
